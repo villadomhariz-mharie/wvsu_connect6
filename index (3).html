@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>WVSU Connect - SDG 4 Quality Education</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1a1a2e;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 100%);
+            color: white;
+            padding: 20px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "🎓";
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 120px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .wvsu-badge {
+            font-size: 14px;
+            font-weight: 500;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 6px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* SDG 4 Banner */
+        .sdg-banner {
+            background: linear-gradient(135deg, #e8a735 0%, #f4c542 100%);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 3px solid #1a472a;
+        }
+
+        .sdg-icon {
+            font-size: 36px;
+            background: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .sdg-text {
+            flex: 1;
+        }
+
+        .sdg-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1a472a;
+        }
+
+        .sdg-description {
+            font-size: 11px;
+            color: #2d3748;
+            margin-top: 2px;
+        }
+
+        .sdg-goal {
+            font-size: 11px;
+            font-weight: 600;
+            color: #1a472a;
+            margin-top: 4px;
+        }
+
+        .student-info {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            backdrop-filter: blur(4px);
+        }
+
+        .student-info strong {
+            font-weight: 600;
+        }
+
+        /* Connection Status */
+        .status-bar {
+            background: white;
+            padding: 10px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .status-online {
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        .status-offline {
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        .sync-badge {
+            background: #2d6a4f;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #eef2f6;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1a472a;
+        }
+
+        .card-title .emoji {
+            font-size: 22px;
+        }
+
+        /* Module List */
+        .module-item {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #eef2f6;
+        }
+
+        .module-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .module-info p {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .module-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: #e5e7eb;
+        }
+
+        .module-badge.downloaded {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .btn-download, .btn-open {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        .btn-download:active {
+            background: #1b4d3e;
+            transform: scale(0.96);
+        }
+
+        .btn-open {
+            background: #e8a735;
+            color: #1a472a;
+        }
+
+        .btn-open:active {
+            background: #d4941f;
+            transform: scale(0.96);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 16px 20px;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+            border-top: 1px solid #eef2f6;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .nav-item:active {
+            background: #f3f4f6;
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #2d6a4f;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eef2f6;
+            color: #1a472a;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: #2d6a4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            z-index: 1000;
+            transition: transform 0.3s;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2d6a4f, #e8a735);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        /* Deadline Item */
+        .deadline-item {
+            padding: 12px;
+            border-left: 3px solid #e8a735;
+            background: #fffbeb;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .deadline-item.completed {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+            opacity: 0.7;
+        }
+
+        .deadline-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .deadline-date {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .deadline-check {
+            float: right;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .deadline-check.checked {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state .emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        /* Quality Education Stats */
+        .quality-stats {
+            background: linear-gradient(135deg, #fef3c7, #fffbeb);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 12px;
+            border: 1px solid #fde68a;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>🎓 WVSU Connect</h1>
+    <div class="wvsu-badge">Western Visayas State University - Janiuay Campus</div>
+    <div class="student-info">
+        👩‍🎓 <strong>Mhariz Villado</strong> | BSIT 3-D | CIT 238<br>
+        📅 2nd Semester SY 2025-2026 | Activity No. 2
+    </div>
+</div>
+
+<!-- SDG 4 Banner -->
+<div class="sdg-banner">
+    <div class="sdg-icon">🎯</div>
+    <div class="sdg-text">
+        <div class="sdg-title">SDG 4: QUALITY EDUCATION</div>
+        <div class="sdg-description">Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all</div>
+        <div class="sdg-goal">🌍 Goal: Equal access to education • Digital inclusion • Bridging the learning gap</div>
+    </div>
+</div>
+
+<!-- Status Bar -->
+<div class="status-bar">
+    <span id="connectionStatus">📡 Checking connection...</span>
+    <span id="syncBadge" class="sync-badge" style="display: none;">🔄 Syncing...</span>
+</div>
+
+<!-- Main Container -->
+<div class="container" id="mainContainer">
+    <!-- Modules Section -->
+    <div id="modulesSection" style="display: block;">
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">📚</span> Learning Modules (Offline-Ready)
+            </div>
+            <div id="modulesList"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">📥</span> Downloaded Resources
+            </div>
+            <div id="downloadedList"></div>
+        </div>
+
+        <!-- SDG 4 Impact Card -->
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">🌱</span> Your SDG 4 Contribution
+            </div>
+            <div class="quality-stats" id="sdgImpactStats"></div>
+        </div>
+    </div>
+
+    <!-- Assignments Section -->
+    <div id="assignmentsSection" style="display: none;">
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">📝</span> Pending Assignments
+            </div>
+            <div id="pendingAssignmentsList"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">✓</span> Completed Submissions
+            </div>
+            <div id="completedAssignmentsList"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">➕</span> Submit New Assignment
+            </div>
+            <button class="btn-download" style="width: 100%;" onclick="showAssignmentModal()">
+                + Create Submission
+            </button>
+        </div>
+    </div>
+
+    <!-- Deadlines Section -->
+    <div id="deadlinesSection" style="display: none;">
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">📅</span> Upcoming Deadlines
+            </div>
+            <div id="deadlinesList"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">➕</span> Add Deadline
+            </div>
+            <button class="btn-download" style="width: 100%;" onclick="showDeadlineModal()">
+                + New Deadline
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div id="progressSection" style="display: none;">
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">📊</span> Learning Progress Dashboard
+            </div>
+            <div id="progressStats"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span class="emoji">🏆</span> SDG 4 Achievement
+            </div>
+            <div id="sdgAchievement"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+    <button class="nav-item active" onclick="switchSection('modules', this)">
+        <span class="nav-icon">📚</span>
+        <span>Modules</span>
+    </button>
+    <button class="nav-item" onclick="switchSection('assignments', this)">
+        <span class="nav-icon">📝</span>
+        <span>Assignments</span>
+    </button>
+    <button class="nav-item" onclick="switchSection('deadlines', this)">
+        <span class="nav-icon">📅</span>
+        <span>Deadlines</span>
+    </button>
+    <button class="nav-item" onclick="switchSection('progress', this)">
+        <span class="nav-icon">📊</span>
+        <span>Progress</span>
+    </button>
+</div>
+
+<!-- Assignment Modal -->
+<div id="assignmentModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">📝 Submit Assignment</div>
+        <div class="form-group">
+            <label>Assignment Title</label>
+            <input type="text" id="assignmentTitle" placeholder="e.g., Mobile App Proposal">
+        </div>
+        <div class="form-group">
+            <label>Your Answer / Submission</label>
+            <textarea id="assignmentContent" placeholder="Enter your answer or paste link..."></textarea>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-secondary" onclick="closeModal('assignmentModal')">Cancel</button>
+            <button class="btn-primary" onclick="submitAssignment()">Submit Offline</button>
+        </div>
+    </div>
+</div>
+
+<!-- Deadline Modal -->
+<div id="deadlineModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">📅 Add New Deadline</div>
+        <div class="form-group">
+            <label>Assignment Title</label>
+            <input type="text" id="deadlineTitle" placeholder="Assignment name">
+        </div>
+        <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" id="deadlineDate">
+        </div>
+        <div class="form-group">
+            <label>Course</label>
+            <input type="text" id="deadlineCourse" placeholder="e.g., CIT 238">
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-secondary" onclick="closeModal('deadlineModal')">Cancel</button>
+            <button class="btn-primary" onclick="addDeadline()">Add Deadline</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+    // ============ DATA STORAGE (LocalStorage - Offline First) ============
+    
+    // Initialize data
+    function initializeData() {
+        if (!localStorage.getItem('modules')) {
+            const modules = [
+                { id: 'M1', title: 'Introduction to Mobile Development', type: 'PDF', size: '2.5MB', downloaded: false, content: 'Mobile development overview for WVSU students...' },
+                { id: 'M2', title: 'Java Programming Fundamentals', type: 'PDF', size: '3.1MB', downloaded: false, content: 'Java basics for Android development...' },
+                { id: 'M3', title: 'UI/UX Design Principles', type: 'Video', size: '15MB', downloaded: false, content: 'Video link: Understanding user experience design' },
+                { id: 'M4', title: 'Android Studio Setup Guide', type: 'PDF', size: '1.8MB', downloaded: false, content: 'Step by step setup guide for WVSU students...' },
+                { id: 'M5', title: 'Database Integration Activity', type: 'Activity', size: '0.5MB', downloaded: false, content: 'Activity worksheet for database concepts' },
+                { id: 'M6', title: 'REST API Integration', type: 'PDF', size: '2.2MB', downloaded: false, content: 'API integration guide for mobile apps' },
+                { id: 'M7', title: 'Firebase Real-time Database', type: 'Video', size: '20MB', downloaded: false, content: 'Firebase tutorial for real-time features' }
+            ];
+            localStorage.setItem('modules', JSON.stringify(modules));
+        }
+        
+        if (!localStorage.getItem('submissions')) {
+            localStorage.setItem('submissions', JSON.stringify([]));
+        }
+        
+        if (!localStorage.getItem('deadlines')) {
+            const deadlines = [
+                { id: 'D1', title: 'Mobile App Proposal', due: '2026-02-10', course: 'CIT 238', completed: false },
+                { id: 'D2', title: 'UI Design Mockups', due: '2026-02-15', course: 'CIT 238', completed: false },
+                { id: 'D3', title: 'Database Project', due: '2026-02-20', course: 'CIT 231', completed: false },
+                { id: 'D4', title: 'Final App Prototype', due: '2026-02-28', course: 'CIT 238', completed: false }
+            ];
+            localStorage.setItem('deadlines', JSON.stringify(deadlines));
+        }
+        
+        if (!localStorage.getItem('submissionQueue')) {
+            localStorage.setItem('submissionQueue', JSON.stringify([]));
+        }
+    }
+    
+    // ============ SDG 4 IMPACT FUNCTIONS ============
+    
+    function updateSDGImpact() {
+        const modules = JSON.parse(localStorage.getItem('modules')) || [];
+        const downloadedCount = modules.filter(m => m.downloaded).length;
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const completedSubmissions = submissions.filter(s => s.synced).length;
+        
+        const impactText = `
+            <div class="stat-item">
+                <span>📚 Modules accessed offline:</span>
+                <span><strong>${downloadedCount}</strong> / ${modules.length}</span>
+            </div>
+            <div class="stat-item">
+                <span>📝 Assignments completed:</span>
+                <span><strong>${completedSubmissions}</strong></span>
+            </div>
+            <div class="stat-item">
+                <span>🌐 Internet dependency reduced:</span>
+                <span><strong>${Math.min(100, downloadedCount * 15)}%</strong></span>
+            </div>
+            <div class="stat-item">
+                <span>🎯 SDG Target 4.3:</span>
+                <span>Equal access to education ✓</span>
+            </div>
+            <hr style="margin: 8px 0; border-color: #fde68a;">
+            <div class="stat-item" style="color: #1a472a; font-weight: 600;">
+                <span>🏆 Your Contribution:</span>
+                <span>${downloadedCount > 3 ? 'Quality Education Champion! 🌟' : 'Keep going! 🌱'}</span>
+            </div>
+        `;
+        
+        document.getElementById('sdgImpactStats').innerHTML = impactText;
+        
+        // Update SDG Achievement in Progress Section
+        const achievementHTML = `
+            <div class="quality-stats">
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <span style="font-size: 36px;">${downloadedCount >= 5 ? '🏆' : (downloadedCount >= 3 ? '⭐' : '🌱')}</span>
+                </div>
+                <div class="stat-item">
+                    <span>🎓 Inclusive Education:</span>
+                    <span>${downloadedCount >= 4 ? 'Achieved' : 'In Progress'}</span>
+                </div>
+                <div class="stat-item">
+                    <span>📱 Digital Learning Access:</span>
+                    <span>${downloadedCount >= 3 ? 'Enhanced' : 'Building'}</span>
+                </div>
+                <div class="stat-item">
+                    <span>🔄 Offline Learning Hours:</span>
+                    <span>~${downloadedCount * 2} hours</span>
+                </div>
+                <div style="margin-top: 10px; text-align: center; font-size: 11px; color: #6b7280;">
+                    "Quality education for all, anywhere, anytime."
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('sdgAchievement').innerHTML = achievementHTML;
+    }
+    
+    // ============ MODULES FUNCTIONS ============
+    
+    function renderModules() {
+        const modules = JSON.parse(localStorage.getItem('modules')) || [];
+        const modulesListDiv = document.getElementById('modulesList');
+        
+        if (modules.length === 0) {
+            modulesListDiv.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><div>No modules available</div></div>';
+            return;
+        }
+        
+        let html = '';
+        modules.forEach(module => {
+            const isDownloaded = module.downloaded;
+            html += `
+                <div class="module-item">
+                    <div class="module-info">
+                        <h4>${escapeHtml(module.title)}</h4>
+                        <p>📄 ${module.type} • ${module.size}</p>
+                    </div>
+                    ${isDownloaded ? 
+                        `<button class="btn-open" onclick="openModule('${module.id}')">📖 Open Offline</button>` :
+                        `<button class="btn-download" onclick="downloadModule('${module.id}')">⬇️ Download for Offline</button>`
+                    }
+                </div>
+            `;
+        });
+        modulesListDiv.innerHTML = html;
+        
+        renderDownloadedModules();
+        updateSDGImpact();
+    }
+    
+    function renderDownloadedModules() {
+        const modules = JSON.parse(localStorage.getItem('modules')) || [];
+        const downloaded = modules.filter(m => m.downloaded);
+        const downloadedListDiv = document.getElementById('downloadedList');
+        
+        if (downloaded.length === 0) {
+            downloadedListDiv.innerHTML = '<div class="empty-state"><div class="emoji">📥</div><div>No downloaded modules yet. Download to learn offline!</div></div>';
+            return;
+        }
+        
+        let html = '';
+        downloaded.forEach(module => {
+            html += `
+                <div class="module-item">
+                    <div class="module-info">
+                        <h4>${escapeHtml(module.title)}</h4>
+                        <p>✓ Downloaded • Available Offline • ${module.size}</p>
+                    </div>
+                    <button class="btn-open" onclick="openModule('${module.id}')">📖 Read</button>
+                </div>
+            `;
+        });
+        downloadedListDiv.innerHTML = html;
+    }
+    
+    function downloadModule(moduleId) {
+        let modules = JSON.parse(localStorage.getItem('modules'));
+        const moduleIndex = modules.findIndex(m => m.id === moduleId);
+        
+        if (moduleIndex !== -1 && !modules[moduleIndex].downloaded) {
+            modules[moduleIndex].downloaded = true;
+            localStorage.setItem('modules', JSON.stringify(modules));
+            showToast(`✅ Downloaded: ${modules[moduleIndex].title} - Now available offline!`);
+            renderModules();
+            updateProgressStats();
+            
+            // Sync to cloud if online
+            syncToCloud();
+        }
+    }
+    
+    function openModule(moduleId) {
+        const modules = JSON.parse(localStorage.getItem('modules'));
+        const module = modules.find(m => m.id === moduleId);
+        
+        if (module) {
+            if (module.type === 'Video') {
+                showToast(`🎬 Playing: ${module.title} (Offline Access)`);
+                alert(`🎬 ${module.title}\n\n${module.content}\n\n[Available offline - No internet needed]`);
+            } else {
+                alert(`📖 ${module.title}\n\n${module.content}\n\n[This content is available OFFLINE - WVSU Connect ensures quality education for all]`);
+            }
+        }
+    }
+    
+    // ============ ASSIGNMENT FUNCTIONS ============
+    
+    function renderAssignments() {
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const pending = submissions.filter(s => !s.synced);
+        const completed = submissions.filter(s => s.synced);
+        
+        const pendingDiv = document.getElementById('pendingAssignmentsList');
+        const completedDiv = document.getElementById('completedAssignmentsList');
+        
+        if (pending.length === 0) {
+            pendingDiv.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><div>No pending assignments. Great work!</div></div>';
+        } else {
+            let html = '';
+            pending.forEach(sub => {
+                html += `
+                    <div class="module-item">
+                        <div class="module-info">
+                            <h4>${escapeHtml(sub.title)}</h4>
+                            <p>📅 ${sub.date} • Status: Saved Locally (Will sync when online)</p>
+                        </div>
+                        <button class="btn-download" onclick="viewSubmission('${sub.id}')">👁️ View</button>
+                    </div>
+                `;
+            });
+            pendingDiv.innerHTML = html;
+        }
+        
+        if (completed.length === 0) {
+            completedDiv.innerHTML = '<div class="empty-state"><div class="emoji">✓</div><div>No completed submissions yet</div></div>';
+        } else {
+            let html = '';
+            completed.forEach(sub => {
+                html += `
+                    <div class="module-item">
+                        <div class="module-info">
+                            <h4>${escapeHtml(sub.title)}</h4>
+                            <p>✅ Synced on ${sub.syncedDate || sub.date}</p>
+                        </div>
+                        <button class="btn-open" onclick="viewSubmission('${sub.id}')">👁️ View</button>
+                    </div>
+                `;
+            });
+            completedDiv.innerHTML = html;
+        }
+    }
+    
+    function showAssignmentModal() {
+        document.getElementById('assignmentModal').classList.add('active');
+        document.getElementById('assignmentTitle').value = '';
+        document.getElementById('assignmentContent').value = '';
+    }
+    
+    function submitAssignment() {
+        const title = document.getElementById('assignmentTitle').value.trim();
+        const content = document.getElementById('assignmentContent').value.trim();
+        
+        if (!title || !content) {
+            showToast('⚠️ Please fill in all fields');
+            return;
+        }
+        
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const newSubmission = {
+            id: Date.now().toString(),
+            title: title,
+            content: content,
+            date: new Date().toLocaleString(),
+            synced: false,
+            syncedDate: null
+        };
+        
+        submissions.push(newSubmission);
+        localStorage.setItem('submissions', JSON.stringify(submissions));
+        
+        // Add to queue for later sync
+        const queue = JSON.parse(localStorage.getItem('submissionQueue')) || [];
+        queue.push(newSubmission);
+        localStorage.setItem('submissionQueue', JSON.stringify(queue));
+        
+        closeModal('assignmentModal');
+        renderAssignments();
+        showToast(`📌 "${title}" saved locally at WVSU Connect. Will sync when internet is available.`);
+        
+        // Try to sync immediately if online
+        syncToCloud();
+        updateSDGImpact();
+    }
+    
+    function viewSubmission(id) {
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const submission = submissions.find(s => s.id === id);
+        
+        if (submission) {
+            alert(`📝 ${submission.title}\n\nSubmission:\n${submission.content}\n\nSubmitted: ${submission.date}\nStatus: ${submission.synced ? 'Synced to WVSU Cloud ✓' : 'Saved Locally (Will sync when online)'}`);
+        }
+    }
+    
+    // ============ DEADLINE FUNCTIONS ============
+    
+    function renderDeadlines() {
+        const deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
+        const deadlinesDiv = document.getElementById('deadlinesList');
+        
+        if (deadlines.length === 0) {
+            deadlinesDiv.innerHTML = '<div class="empty-state"><div class="emoji">📅</div><div>No deadlines set. Add one to stay organized!</div></div>';
+            return;
+        }
+        
+        let html = '';
+        deadlines.forEach(deadline => {
+            const isOverdue = !deadline.completed && deadline.due < new Date().toISOString().split('T')[0];
+            html += `
+                <div class="deadline-item ${deadline.completed ? 'completed' : ''}" style="${isOverdue ? 'border-left-color: #ef4444;' : ''}">
+                    <div class="deadline-check ${deadline.completed ? 'checked' : ''}" onclick="toggleDeadline('${deadline.id}')"></div>
+                    <div class="deadline-title">${escapeHtml(deadline.title)}</div>
+                    <div class="deadline-date">📅 Due: ${deadline.due} • ${deadline.course} ${isOverdue ? '⚠️ OVERDUE - Submit soon!' : ''}</div>
+                </div>
+            `;
+        });
+        deadlinesDiv.innerHTML = html;
+    }
+    
+    function showDeadlineModal() {
+        document.getElementById('deadlineModal').classList.add('active');
+        document.getElementById('deadlineTitle').value = '';
+        document.getElementById('deadlineDate').value = '';
+        document.getElementById('deadlineCourse').value = '';
+    }
+    
+    function addDeadline() {
+        const title = document.getElementById('deadlineTitle').value.trim();
+        const due = document.getElementById('deadlineDate').value;
+        const course = document.getElementById('deadlineCourse').value.trim();
+        
+        if (!title || !due || !course) {
+            showToast('⚠️ Please fill in all fields');
+            return;
+        }
+        
+        const deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
+        const newDeadline = {
+            id: Date.now().toString(),
+            title: title,
+            due: due,
+            course: course,
+            completed: false
+        };
+        
+        deadlines.push(newDeadline);
+        localStorage.setItem('deadlines', JSON.stringify(deadlines));
+        
+        closeModal('deadlineModal');
+        renderDeadlines();
+        showToast(`✅ Deadline added: ${title}`);
+        
+        syncToCloud();
+    }
+    
+    function toggleDeadline(id) {
+        const deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
+        const deadline = deadlines.find(d => d.id === id);
+        
+        if (deadline) {
+            deadline.completed = !deadline.completed;
+            localStorage.setItem('deadlines', JSON.stringify(deadlines));
+            renderDeadlines();
+            updateProgressStats();
+            showToast(deadline.completed ? `✓ Completed: ${deadline.title}` : `↺ Reopened: ${deadline.title}`);
+            syncToCloud();
+        }
+    }
+    
+    // ============ PROGRESS FUNCTIONS ============
+    
+    function updateProgressStats() {
+        const modules = JSON.parse(localStorage.getItem('modules')) || [];
+        const downloadedCount = modules.filter(m => m.downloaded).length;
+        const totalModules = modules.length;
+        
+        const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+        const completedSubmissions = submissions.filter(s => s.synced).length;
+        
+        const deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
+        const completedDeadlines = deadlines.filter(d => d.completed).length;
+        
+        const moduleProgress = totalModules > 0 ? (downloadedCount / totalModules * 100).toFixed(0) : 0;
+        const overallProgress = totalModules + submissions.length + deadlines.length > 0 ?
+            ((downloadedCount + completedSubmissions + completedDeadlines) / 
+             (totalModules + submissions.length + deadlines.length) * 100).toFixed(0) : 0;
+        
+        const progressDiv = document.getElementById('progressStats');
+        progressDiv.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <strong>📚 Module Progress (Offline Access)</strong>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${moduleProgress}%;"></div></div>
+                <div style="font-size: 13px; color: #6b7280;">${downloadedCount}/${totalModules} modules downloaded for offline learning</div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <strong>📝 Assignment Progress</strong>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${submissions.length > 0 ? (completedSubmissions / submissions.length * 100) : 0}%;"></div></div>
+                <div style="font-size: 13px; color: #6b7280;">${completedSubmissions}/${submissions.length} submissions synced to cloud</div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <strong>✅ Deadline Progress</strong>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${deadlines.length > 0 ? (completedDeadlines / deadlines.length * 100) : 0}%;"></div></div>
+                <div style="font-size: 13px; color: #6b7280;">${completedDeadlines}/${deadlines.length} deadlines completed</div>
+            </div>
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #eef2f6;">
+                <strong>🎯 Overall Learning Progress: ${overallProgress}%</strong>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${overallProgress}%;"></div></div>
+            </div>
+            <div style="margin-top: 16px; text-align: center; font-size: 12px; color: #6b7280;">
+                🌟 ${overallProgress >= 70 ? 'Excellent! You\'re championing quality education!' : 'Keep learning! Every module downloaded brings quality education closer.'}
+            </div>
+        `;
+    }
+    
+    // ============ SYNC FUNCTIONALITY (Real-time when online) ============
+    
+    function checkConnectivity() {
+        const status = navigator.onLine;
+        const statusDiv = document.getElementById('connectionStatus');
+        
+        if (status) {
+            statusDiv.innerHTML = '✅ Connected to WVSU Cloud • Real-time Sync Active';
+            statusDiv.className = 'status-online';
+            syncToCloud();
+        } else {
+            statusDiv.innerHTML = '📴 Offline Mode • Learning Without Internet • Changes Saved Locally';
+            statusDiv.className = 'status-offline';
+        }
+    }
+    
+    function syncToCloud() {
+        if (!navigator.onLine) {
+            console.log('📴 Offline mode: Sync deferred until connection available');
+            return;
+        }
+        
+        const syncBadge = document.getElementById('syncBadge');
+        syncBadge.style.display = 'inline-block';
+        
+        setTimeout(() => {
+            try {
+                const queue = JSON.parse(localStorage.getItem('submissionQueue')) || [];
+                const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+                
+                if (queue.length > 0) {
+                    queue.forEach(qItem => {
+                        const subIndex = submissions.findIndex(s => s.id === qItem.id);
+                        if (subIndex !== -1) {
+                            submissions[subIndex].synced = true;
+                            submissions[subIndex].syncedDate = new Date().toLocaleString();
+                        }
+                    });
+                    
+                    localStorage.setItem('submissions', JSON.stringify(submissions));
+                    localStorage.setItem('submissionQueue', JSON.stringify([]));
+                    
+                    showToast(`☁️ Synced ${queue.length} submission(s) to WVSU Cloud`);
+                    renderAssignments();
+                    updateSDGImpact();
+                }
+                
+                console.log('✅ Sync completed at:', new Date().toLocaleString());
+                
+            } catch (e) {
+                console.error('Sync error:', e);
+            } finally {
+                syncBadge.style.display = 'none';
+            }
+        }, 1000);
+    }
+    
+    // ============ UI NAVIGATION ============
+    
+    function switchSection(section, element) {
+        // Hide all sections
+        document.getElementById('modulesSection').style.display = 'none';
+        document.getElementById('assignmentsSection').style.display = 'none';
+        document.getElementById('deadlinesSection').style.display = 'none';
+        document.getElementById('progressSection').style.display = 'none';
+        
+        // Show selected section
+        if (section === 'modules') document.getElementById('modulesSection').style.display = 'block';
+        if (section === 'assignments') document.getElementById('assignmentsSection').style.display = 'block';
+        if (section === 'deadlines') document.getElementById('deadlinesSection').style.display = 'block';
+        if (section === 'progress') document.getElementById('progressSection').style.display = 'block';
+        
+        // Update active nav state
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (element) element.classList.add('active');
+        
+        // Refresh data for the section
+        if (section === 'modules') {
+            renderModules();
+            updateSDGImpact();
+        }
+        if (section === 'assignments') renderAssignments();
+        if (section === 'deadlines') renderDeadlines();
+        if (section === 'progress') {
+            updateProgressStats();
+            updateSDGImpact();
+        }
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+    
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // ============ EVENT LISTENERS ============
+    
+    window.addEventListener('load', () => {
+        initializeData();
+        checkConnectivity();
+        renderModules();
+        renderAssignments();
+        renderDeadlines();
+        updateProgressStats();
+        updateSDGImpact();
+        
+        window.addEventListener('online', () => {
+            checkConnectivity();
+            showToast('🟢 Back online! Syncing your progress to WVSU Cloud...');
+            syncToCloud();
+        });
+        
+        window.addEventListener('offline', () => {
+            checkConnectivity();
+            showToast('🔴 Offline mode active - WVSU Connect works fully without internet!');
+        });
+        
+        setInterval(() => {
+            if (navigator.onLine) {
+                syncToCloud();
+            }
+        }, 30000);
+    });
+    
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('active');
+        }
+    }
+</script>
+
+</body>
+</html>
